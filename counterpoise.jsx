@@ -43,12 +43,12 @@
 
   var topToBottomButton = positionButtonsRow.add("button", undefined, "Top to Bottom");
   topToBottomButton.onClick = function() {
-    addKeyframesWithEasing("Position", [0, parseFloat(positionMoveAmountInput.text)]);
+    addKeyframesWithEasing("Position", [0, -parseFloat(positionMoveAmountInput.text)]);
   };
 
   var bottomToTopButton = positionButtonsRow.add("button", undefined, "Bottom to Top");
   bottomToTopButton.onClick = function() {
-    addKeyframesWithEasing("Position", [0, -parseFloat(positionMoveAmountInput.text)]);
+    addKeyframesWithEasing("Position", [0, parseFloat(positionMoveAmountInput.text)]);
   };
 
   // rotation selectors
