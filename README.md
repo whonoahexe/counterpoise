@@ -32,7 +32,7 @@ this script is released under the MIT license. See the [LICENSE](LICENSE) file f
 
 ## contributing
 
-Don't lol. Go do something productive.
+don't lol. go do something productive.
 
 ## credits
 

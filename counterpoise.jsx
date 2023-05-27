@@ -9,10 +9,10 @@
   var panelTitle = dockedPanel.scriptPanel.add("statictext", undefined, scriptName);
   panelTitle.alignment = "center";
   panelTitle.alignment = "fill";
-  panelTitle.text = scriptName;
-  panelTitle.graphics.font = ScriptUI.newFont("Arial", "Bold", 20);
+  panelTitle.text = scriptName.toLowerCase();
+  panelTitle.graphics.font = ScriptUI.newFont("arial", "bold", 20);
 
-  //position selectors
+  // position selectors
   var positionSection = dockedPanel.scriptPanel.add("panel", undefined, "Position");
   positionSection.alignChildren = "left";
 
@@ -80,77 +80,81 @@
     if (app.project.activeItem instanceof CompItem && app.project.activeItem.selectedLayers.length > 0) {
       app.beginUndoGroup("Add Keyframes with Easing");
 
-      var selectedLayer = app.project.activeItem.selectedLayers[0];
+      var selectedLayers = app.project.activeItem.selectedLayers;
       var currentTime = app.project.activeItem.time;
-      
-      if (positionCheckboxGroup.children[0].value) {  // add keyframes at start
-        var selectedLayerInPoint = selectedLayer.inPoint;
 
-        var keyframeBeforeTime = selectedLayerInPoint - 20 / app.project.activeItem.frameRate;
-        var keyframeAfterTime = selectedLayerInPoint + 20 / app.project.activeItem.frameRate;
+      for (var i = 0; i < selectedLayers.length; i++) {
+        var selectedLayer = selectedLayers[i];
 
-        var property = selectedLayer.property(propertyType);
-        var keyframeBefore = property.addKey(keyframeBeforeTime);
-        var keyframeAfter = property.addKey(keyframeAfterTime);
+        if (positionCheckboxGroup.children[0].value) {  // Add keyframes at start
+          var selectedLayerInPoint = selectedLayer.inPoint;
 
-        var startValue = property.valueAtTime(currentTime, true);
-        var modifiedValue = startValue + offset;
-        property.setValueAtTime(keyframeBeforeTime, modifiedValue);
-        property.setValueAtTime(keyframeAfterTime, startValue);
+          var keyframeBeforeTime = selectedLayerInPoint - 20 / app.project.activeItem.frameRate;
+          var keyframeAfterTime = selectedLayerInPoint + 20 / app.project.activeItem.frameRate;
 
-        var easeIn = new KeyframeEase(0.5, 90);
-        var easeOut = new KeyframeEase(0.5, 90);
-        property.setTemporalEaseAtKey(keyframeBefore, [easeIn], [easeOut]);
-        property.setTemporalEaseAtKey(keyframeAfter, [easeIn], [easeOut]);
+          var property = selectedLayer.property(propertyType);
+          var keyframeBefore = property.addKey(keyframeBeforeTime);
+          var keyframeAfter = property.addKey(keyframeAfterTime);
 
-        property.setSelectedAtKey(keyframeBefore, true);
-        property.setSelectedAtKey(keyframeAfter, true);
-      }
+          var startValue = property.valueAtTime(currentTime, true);
+          var modifiedValue = startValue + offset;
+          property.setValueAtTime(keyframeBeforeTime, modifiedValue);
+          property.setValueAtTime(keyframeAfterTime, startValue);
 
-      if (positionCheckboxGroup.children[1].value) {  // add keyframes at end
-        var layerOutPoint = selectedLayer.outPoint;
+          var easeIn = new KeyframeEase(0.5, 90);
+          var easeOut = new KeyframeEase(0.5, 90);
+          property.setTemporalEaseAtKey(keyframeBefore, [easeIn], [easeOut]);
+          property.setTemporalEaseAtKey(keyframeAfter, [easeIn], [easeOut]);
 
-        var endKeyframeBeforeTime = layerOutPoint - 20 / app.project.activeItem.frameRate;
-        var endKeyframeAfterTime = layerOutPoint + 20 / app.project.activeItem.frameRate;
+          property.setSelectedAtKey(keyframeBefore, true);
+          property.setSelectedAtKey(keyframeAfter, true);
+        }
 
-        var property = selectedLayer.property(propertyType);
-        var endKeyframeBefore = property.addKey(endKeyframeBeforeTime);
-        var endKeyframeAfter = property.addKey(endKeyframeAfterTime);
+        if (positionCheckboxGroup.children[1].value) {  // Add keyframes at end
+          var layerOutPoint = selectedLayer.outPoint;
 
-        var startValue = property.valueAtTime(currentTime, true);
-        var modifiedValue = startValue + offset;
-        property.setValueAtTime(endKeyframeBeforeTime, startValue);
-        property.setValueAtTime(endKeyframeAfterTime, modifiedValue);
+          var endKeyframeBeforeTime = layerOutPoint - 20 / app.project.activeItem.frameRate;
+          var endKeyframeAfterTime = layerOutPoint + 20 / app.project.activeItem.frameRate;
 
-        var easeIn = new KeyframeEase(0.5, 90);
-        var easeOut = new KeyframeEase(0.5, 90);
-        property.setTemporalEaseAtKey(endKeyframeBefore, [easeIn], [easeOut]);
-        property.setTemporalEaseAtKey(endKeyframeAfter, [easeIn], [easeOut]);
+          var property = selectedLayer.property(propertyType);
+          var endKeyframeBefore = property.addKey(endKeyframeBeforeTime);
+          var endKeyframeAfter = property.addKey(endKeyframeAfterTime);
 
-        property.setSelectedAtKey(endKeyframeBefore, true);
-        property.setSelectedAtKey(endKeyframeAfter, true);
-      }
+          var startValue = property.valueAtTime(currentTime, true);
+          var modifiedValue = startValue + offset;
+          property.setValueAtTime(endKeyframeBeforeTime, startValue);
+          property.setValueAtTime(endKeyframeAfterTime, modifiedValue);
 
-      if (!positionCheckboxGroup.children[0].value && !positionCheckboxGroup.children[1].value) {  // add keyframes at current time
-        var keyframeBeforeTime = currentTime - 20 / app.project.activeItem.frameRate;
-        var keyframeAfterTime = currentTime + 20 / app.project.activeItem.frameRate;
+          var easeIn = new KeyframeEase(0.5, 90);
+          var easeOut = new KeyframeEase(0.5, 90);
+          property.setTemporalEaseAtKey(endKeyframeBefore, [easeIn], [easeOut]);
+          property.setTemporalEaseAtKey(endKeyframeAfter, [easeIn], [easeOut]);
 
-        var property = selectedLayer.property(propertyType);
-        var keyframeBefore = property.addKey(keyframeBeforeTime);
-        var keyframeAfter = property.addKey(keyframeAfterTime);
+          property.setSelectedAtKey(endKeyframeBefore, true);
+          property.setSelectedAtKey(endKeyframeAfter, true);
+        }
 
-        var startValue = property.valueAtTime(currentTime, true);
-        var modifiedValue = startValue + offset;
-        property.setValueAtTime(keyframeBeforeTime, modifiedValue);
-        property.setValueAtTime(keyframeAfterTime, startValue);
+        if (!positionCheckboxGroup.children[0].value && !positionCheckboxGroup.children[1].value) {  // Add keyframes at current time
+          var keyframeBeforeTime = currentTime - 20 / app.project.activeItem.frameRate;
+          var keyframeAfterTime = currentTime + 20 / app.project.activeItem.frameRate;
 
-        var easeIn = new KeyframeEase(0.5, 90);
-        var easeOut = new KeyframeEase(0.5, 90);
-        property.setTemporalEaseAtKey(keyframeBefore, [easeIn], [easeOut]);
-        property.setTemporalEaseAtKey(keyframeAfter, [easeIn], [easeOut]);
+          var property = selectedLayer.property(propertyType);
+          var keyframeBefore = property.addKey(keyframeBeforeTime);
+          var keyframeAfter = property.addKey(keyframeAfterTime);
 
-        property.setSelectedAtKey(keyframeBefore, true);
-        property.setSelectedAtKey(keyframeAfter, true);
+          var startValue = property.valueAtTime(currentTime, true);
+          var modifiedValue = startValue + offset;
+          property.setValueAtTime(keyframeBeforeTime, modifiedValue);
+          property.setValueAtTime(keyframeAfterTime, startValue);
+
+          var easeIn = new KeyframeEase(0.5, 90);
+          var easeOut = new KeyframeEase(0.5, 90);
+          property.setTemporalEaseAtKey(keyframeBefore, [easeIn], [easeOut]);
+          property.setTemporalEaseAtKey(keyframeAfter, [easeIn], [easeOut]);
+
+          property.setSelectedAtKey(keyframeBefore, true);
+          property.setSelectedAtKey(keyframeAfter, true);
+        }
       }
 
       app.endUndoGroup();
