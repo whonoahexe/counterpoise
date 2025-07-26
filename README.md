@@ -26,19 +26,6 @@
 5. customize the movement or rotation parameters as desired.
 6. click the respective buttons to apply the keyframes with easing.
 
-## license
-
-this script is released under the MIT license. See the [LICENSE](LICENSE) file for more details.
-
 ## contributing
 
 don't lol. go do something productive.
-
-## credits
-
-.noah
-
-## contact
-
-Lmao bai.
-
